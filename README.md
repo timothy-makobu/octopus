@@ -13,5 +13,6 @@ Binaries needed:
 
 Python (2.6 or 2.7) needed.
 
+Formerly hosted here https://code.google.com/p/tims-octopus/ 
 
 2010 - 2014, Timothy Makobu @timkofu
