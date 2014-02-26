@@ -1,4 +1,6 @@
-Octopus! re-encodes .mp3, .wav, .aac, flac and .m4a sound files to true-stereo psycho-acoustic mp3.
+![Logo](https://code.google.com/p/tims-octopus/logo?cct=1260817422) 
+
+####Octopus! re-encodes .mp3, .wav, .aac, flac and .m4a sound files to true-stereo psycho-acoustic mp3.
 
 Octopus! makes your music have consistent quality.
 
@@ -13,5 +15,6 @@ Binaries needed:
 
 Python (2.6 or 2.7) needed.
 
+Formerly hosted here https://code.google.com/p/tims-octopus/ 
 
 2010 - 2014, Timothy Makobu @timkofu
