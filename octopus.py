@@ -3,10 +3,6 @@
 
 # Octopus! sounds goood :-)
 
-# Notes:
-# * You will need to normalize the tracks after Octopus! is done.
-#   I recomend http://mp3gain.sourceforge.net/ Linux and OS X
-#   versions are available. "Radio Gain Mode" and Gain Value 89 db recommended.
 # * Only reencoding mp3, wav, m4a, aac and flac
 
 import os
