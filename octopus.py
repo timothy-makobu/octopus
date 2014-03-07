@@ -16,31 +16,41 @@ import random
 import datetime
 import multiprocessing
 from subprocess import Popen, PIPE
-from progressbar import ProgressBar
+from clint.textui import progress
+from mutagen.easyid3 import EasyID3
 
 __author__ = "Timothy Makobu"
 
 # config -- set paths to required binaries  #
 config = {
-    'lame':r'/opt/local/bin/lame',
-    'faad':r'/opt/local/bin/faad',
-    'flac':r'/opt/local/bin/flac',
+    # Paths on Ubuntu 12.04
+    'lame':r'/usr/bin/lame',
+    'faad':r'/usr/bin/faad',
+    'flac':r'/usr/bin/flac',
+    'mp3gain':r'/usr/bin/mp3gain',
     'lameopts':['-m', 's', '-q', '0', '--vbr-new', '-V', '0', '-b', '128', '-B', '192', '--silent'],
     'max_proc':10,
 }
 
-for path in [config.get('paths', x) for x in config.options('paths')]:
-    if not os.path.isfile(path):
-        print '%s is not a file; exiting ...' % path
+for ex in [x for x in config.keys() if x not in ['lameopts','max_proc']]:
+    if not os.path.isfile(config[ex]):
+        print '%s is not a file; exiting ...' % config[ex]
         sys.exit()
 # *** #
 
 # Transcode factory
 def reencode_mp3(tune):
     try:
+        id3 = EasyID3(tune)
+        if id3.has_key('encodedby'):
+            if id3['encodedby'][0] == 'octopus':
+                return
         trash_can.write(''.join(Popen([lame, tune]+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.rename(os.path.splitext(tune)[0]+'.mp3.mp3', tune)
-    except OSError,e:
+        id3['encodedby'] = 'octopus'
+        id3.save()
+        trash_can.write(''.join(Popen([mp3gain, '-r', '-q', tune], stdout=PIPE, stderr=PIPE).communicate()))
+    except OSError, e:
         octo_error_log(path, str(e))
         pass
 
@@ -49,17 +59,24 @@ def reencode_wav_to_mp3(tune):
         trash_can.write(''.join(Popen([lame, tune]+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(tune)
         os.rename(tune+'.mp3', os.path.splitext(tune)[0] + '.mp3')
+        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        trash_can.write(''.join(
+            Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError, e:
         octo_error_log(path, str(e))
         pass
 
 def reencode_itunes_to_mp3(tune):
     try:
-        trash_can.write(''.join(Popen([faad, '-q', '-o', os.path.splitext(tune)[0] + '.wav', tune], stdout=PIPE, stderr=PIPE).communicate()))
+        trash_can.write(''.join(
+            Popen([faad, '-q', '-o', os.path.splitext(tune)[0] + '.wav', tune], stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(tune)
         trash_can.write(''.join(Popen([lame, os.path.splitext(tune)[0] + '.wav']+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(os.path.splitext(tune)[0] + '.wav.mp3', os.path.splitext(tune)[0] + '.mp3')
+        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        trash_can.write(''.join(
+            Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError,e:
         octo_error_log(path, str(e))
         pass
@@ -71,16 +88,22 @@ def reencode_flac_to_mp3(tune):
         trash_can.write(''.join(Popen([lame, os.path.splitext(tune)[0] + '.wav']+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(os.path.splitext(tune)[0] + '.wav.mp3', os.path.splitext(tune)[0] + '.mp3')
+        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        trash_can.write(''.join(
+            Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError,e:
         octo_error_log(path, str(e))
         pass
+
 
 # Utility functions
 def get_tunes(path):
     for fileb in os.walk(path):
         for tune in fileb[2]:
             if os.path.splitext(os.path.join(fileb[0], tune))[1] in ('.mp3','.wav','.acc','.m4a','.flac'):
-                yield os.path.join(fileb[0], tune)
+                eff = os.path.join(fileb[0], tune)
+                if os.path.getsize(eff) >= 1024:
+                    yield eff
 
 def normalize_extension_case(path):
     for fileb in os.walk(path):
@@ -117,6 +140,7 @@ def get_tune_count(path):
             if os.path.splitext(os.path.join(fileb[0], tune))[1] in ('.mp3','.wav','.acc','.m4a','.flac'):
                 tune_count += 1
     return tune_count
+
 
 
 # Managers
@@ -162,10 +186,10 @@ def main():
     octo_log(path, 'Re-encoding %d track(s) ...<br>' % tune_count)
     
     pool = multiprocessing.Pool(proc_count)
-    progress_bar = ProgressBar(maxval=tune_count)
-    for i,exhaust in zip(progress_bar(xrange(tune_count)), pool.imap(dispatcher, get_tunes(path))):
+    for i,exhaust in zip(progress.bar(xrange(tune_count)), pool.imap(dispatcher, get_tunes(path))):
         time.sleep(random.randint(7,14) / 10)
         del(exhaust)
+
 
     octo_log(path, "<br>Success!<br>")
     end_time = time.time()
@@ -183,9 +207,10 @@ if __name__ == '__main__':
     #        sys.exit()
 
     try:
-        #locals().update(config)
+        locals().update(config)
         trash_can = open(os.devnull, 'w')
         path = raw_input('Type path to music folder (Example: /home/me/Music): ').strip()
         sys.exit(main())
     except KeyboardInterrupt:
         print;sys.exit()
+
