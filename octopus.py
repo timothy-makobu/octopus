@@ -17,13 +17,14 @@ from mutagen.easyid3 import EasyID3
 
 __author__ = "Timothy Makobu"
 
-# config -- set paths to required binaries  #
+# EDIT THIS -- set paths to required binaries  #
 config = {
-    # Paths on Ubuntu 12.04
     'lame':r'/usr/bin/lame',
     'faad':r'/usr/bin/faad',
     'flac':r'/usr/bin/flac',
-    'mp3gain':r'/usr/bin/mp3gain',
+    'mp3gain':r'/usr/bin/mp3gain', # On OS X, install aacgain via macpors and enter the path here.
+
+# NO EDITING BELOW THIS LINE #
     'lameopts':['-m', 's', '-q', '0', '--vbr-new', '-V', '0', '-b', '128', '-B', '192', '--silent'],
     'max_proc':10,
 }

@@ -12,4 +12,10 @@ Binaries needed:
 
 Python 2.6 or 2.7
 
+######Usage:
+- Clone the repository $git clone git@github.com:timkofu/octopus.git
+- Edit octopus.py and set the paths to the required binaries
+- Run and enjoy
+
+
 2010 - 2014, Timothy Makobu @timkofu
