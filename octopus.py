@@ -3,7 +3,7 @@
 
 # Octopus! sounds goood :-)
 
-# * Only reencoding mp3, wav, m4a, aac and flac
+# * Re-encodes mp3, wav, m4a, aac and flac
 
 import os
 import sys
@@ -215,4 +215,3 @@ if __name__ == '__main__':
         sys.exit(main())
     except KeyboardInterrupt:
         print;sys.exit()
-
