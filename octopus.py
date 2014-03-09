@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
 # Octopus! sounds goood :-)
@@ -13,16 +13,17 @@ import datetime
 import multiprocessing
 from subprocess import Popen, PIPE
 from clint.textui import progress
-from mutagen.easyid3 import EasyID3
+from mutagen.id3 import TENC
+from mutagen.mp3 import MP3
 
 __author__ = "Timothy Makobu"
 
 # EDIT THIS -- set paths to required binaries  #
 config = {
-    'lame':r'/usr/bin/lame',
-    'faad':r'/usr/bin/faad',
-    'flac':r'/usr/bin/flac',
-    'mp3gain':r'/usr/bin/mp3gain', # On OS X, install aacgain via macpors and enter the path here.
+    'lame':r'/opt/local/bin/lame',
+    'faad':r'/opt/local/bin/faad',
+    'flac':r'/opt/local/bin/flac',
+    'mp3gain':r'/opt/local/bin/aacgain', # On OS X, install aacgain via macpors and enter the path here.
 
 # NO EDITING BELOW THIS LINE #
     'lameopts':['-m', 's', '-q', '0', '--vbr-new', '-V', '0', '-b', '128', '-B', '192', '--silent'],
@@ -36,16 +37,20 @@ for ex in [x for x in config.keys() if x not in ['lameopts','max_proc']]:
 # *** #
 
 # Transcode factory
+def _add_id3_tag(tune):
+    track = MP3(tune)
+    track['TENC'] = TENC(encoding=3, text='octopus')
+    track.save()
+
 def reencode_mp3(tune):
     try:
-        id3 = EasyID3(tune)
-        if id3.has_key('encodedby'):
-            if id3['encodedby'][0] == 'octopus':
+        track = MP3(tune)
+        if track.has_key('TENC'):
+            if track['TENC'] == 'octopus':
                 return
+        _add_id3_tag(tune)
         trash_can.write(''.join(Popen([lame, tune]+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.rename(os.path.splitext(tune)[0]+'.mp3.mp3', tune)
-        id3['encodedby'] = 'octopus'
-        id3.save()
         trash_can.write(''.join(Popen([mp3gain, '-r', '-q', tune], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError, e:
         octo_error_log(path, str(e))
@@ -56,7 +61,7 @@ def reencode_wav_to_mp3(tune):
         trash_can.write(''.join(Popen([lame, tune]+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(tune)
         os.rename(tune+'.mp3', os.path.splitext(tune)[0] + '.mp3')
-        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
         trash_can.write(''.join(
             Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError, e:
@@ -71,7 +76,7 @@ def reencode_itunes_to_mp3(tune):
         trash_can.write(''.join(Popen([lame, os.path.splitext(tune)[0] + '.wav']+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(os.path.splitext(tune)[0] + '.wav.mp3', os.path.splitext(tune)[0] + '.mp3')
-        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
         trash_can.write(''.join(
             Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError,e:
@@ -85,7 +90,7 @@ def reencode_flac_to_mp3(tune):
         trash_can.write(''.join(Popen([lame, os.path.splitext(tune)[0] + '.wav']+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(os.path.splitext(tune)[0] + '.wav.mp3', os.path.splitext(tune)[0] + '.mp3')
-        id3 = EasyID3(os.path.splitext(tune)[0] + '.mp3');id3['encodedby'] = 'octopus';id3.save()
+        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
         trash_can.write(''.join(
             Popen([mp3gain, '-r', '-q', os.path.splitext(tune)[0] + '.mp3'], stdout=PIPE, stderr=PIPE).communicate()))
     except OSError,e:
