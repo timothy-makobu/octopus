@@ -199,7 +199,7 @@ def main():
     octo_log(path, 're-encoded %d track(s) in %7.2f seconds, [%5.2f minutes]' % (tune_count, end_time - start_time, (end_time - start_time)/60))
     octo_log(path, 'Size After Re-encode: %d MiB' % (get_dir_size(path)/1048576))
     print "\nRock on! :-)"
-    octo_log(path, '<p><a href="http://tims-octopus.googlecode.com/">http://tims-octopus.googlecode.com</a>\
+    octo_log(path, '<p><a href="https://github.com/timkofu/octopus">GitHub</a>\
     </p><p>(C)%s %s</p>' % (datetime.date.today().year,__author__), p=False)
 
 
