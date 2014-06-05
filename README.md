@@ -13,6 +13,6 @@ Binaries needed:
 Requires Python 2.7
 
 ######Usage:
-- Clone the repository $git clone https://github.com:timkofu/octopus.git
+- Clone the repository $git clone https://github.com/timkofu/octopus.git
 - Edit octoconf.json and set the paths to the required binaries
 - Run and enjoy
