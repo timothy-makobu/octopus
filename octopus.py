@@ -8,6 +8,7 @@
 import os
 import sys
 import time
+import json
 import random
 import datetime
 import multiprocessing
@@ -18,17 +19,14 @@ from mutagen.mp3 import MP3
 
 __author__ = "Timothy Makobu"
 
-# EDIT THIS -- set paths to required binaries  #
+# *** configs *** #
 config = {
-    'lame':r'/opt/local/bin/lame',
-    'faad':r'/opt/local/bin/faad',
-    'flac':r'/opt/local/bin/flac',
-    'mp3gain':r'/opt/local/bin/aacgain', # On OS X, install aacgain via macpors and enter the path here.
-
-# NO EDITING BELOW THIS LINE #
     'lameopts':['-m', 's', '-q', '0', '--vbr-new', '-V', '0', '-b', '128', '-B', '192', '--silent'],
     'max_proc':10,
 }
+
+with open('octoconf.json') as more_conf:
+    config.update(json.loads(more_conf.read()))
 
 for ex in [x for x in config.keys() if x not in ['lameopts','max_proc']]:
     if not os.path.isfile(config[ex]):

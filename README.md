@@ -10,10 +10,9 @@ Binaries needed:
 - Lame http://lame.sourceforge.net/
 - mp3gain http://mp3gain.sourceforge.net/
 
-Python 2.6 or 2.7
+Requires Python 2.7
 
 ######Usage:
 - Clone the repository $git clone git@github.com:timkofu/octopus.git
-- Edit octopus.py and set the paths to the required binaries
+- Edit octoconf.json and set the paths to the required binaries
 - Run and enjoy
-

@@ -1,0 +1,6 @@
+{
+    "faad": "/opt/local/bin/faad",
+    "mp3gain": "/opt/local/bin/aacgain",
+    "flac": "/opt/local/bin/flac",
+    "lame": "/opt/local/bin/lame"
+}
