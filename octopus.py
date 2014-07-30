@@ -25,7 +25,7 @@ config = {
     'max_proc':10,
 }
 
-with open('octoconf.json') as more_conf:
+with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf:
     config.update(json.loads(more_conf.read()))
 
 for ex in [x for x in config.keys() if x not in ['lameopts','max_proc']]:
