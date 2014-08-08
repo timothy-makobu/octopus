@@ -166,7 +166,7 @@ def main():
     if not tune_count:
         raw_input("Found %d tacks to re-encode. Press ENTER to exit ..." % tune_count)
         sys.exit()
-    if raw_input('\nOk; ready to reencode %d tracks.\nHave you backed up the\n[%s]\nfolder??? [y/N]: ' % (tune_count, path)).lower() != 'y':
+    if raw_input('\nOk; ready to reencode %d tracks.\nHave you backed up the\n[%s]\nfolder??? \n[y/N]: ' % (tune_count, os.getcwdu())).lower() != 'y':
         sys.exit()
     
     for log_file in ('OCTOPUS-LOG.html', 'error_log.html'):
