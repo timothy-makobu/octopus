@@ -1,3 +1,2 @@
 clint==0.3.4
 mutagen==1.22
-twisted==14.0.0
