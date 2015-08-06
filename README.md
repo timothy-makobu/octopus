@@ -8,7 +8,7 @@ Binaries needed:
 - Faad2 http://www.audiocoding.com/faad2.html
 - Flac https://xiph.org/flac/download.html
 - Lame http://lame.sourceforge.net/
-- mp3gain http://mp3gain.sourceforge.net/
+- aacgain http://aacgain.altosdesign.com/ or mp3gain http://mp3gain.sourceforge.net/
 
 Requires Python 2.7
 
