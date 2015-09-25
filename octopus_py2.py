@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- coding: UTF-8 -*-
 
 # Octopus! sounds goood :-)
@@ -54,7 +54,7 @@ def reencode_mp3(tune):
         octo_error_log(path, str(e))
         pass
 
-def reencode_wav_to_mp3(tune):    
+def reencode_wav_to_mp3(tune):
     try:
         trash_can.write(''.join(Popen([lame, tune]+lameopts, stdout=PIPE, stderr=PIPE).communicate()))
         os.remove(tune)
@@ -112,7 +112,7 @@ def normalize_extension_case(path):
                 oldSong = os.path.join(fileb[0], tune)
                 newSong = os.path.splitext(os.path.join(fileb[0], tune))[0]+os.path.splitext(os.path.join(fileb[0], tune))[1].lower()
                 os.rename(oldSong, newSong)
-    
+
 def get_dir_size(path):
     dirSize = 0
     for (fpath, dirs, files) in os.walk(path):
@@ -159,7 +159,7 @@ def main():
     if not os.path.isdir(path):
         raw_input("%s is not a valid folder. Press ENTER to exit ..." % path)
         sys.exit()
-    
+
     curr_tune = 1
     tune_count = get_tune_count(path)
 
@@ -168,11 +168,11 @@ def main():
         sys.exit()
     if raw_input('\nOk; ready to reencode %d tracks.\nHave you backed up the\n[%s]\nfolder??? \n[y/N]: ' % (tune_count, os.getcwdu())).lower() != 'y':
         sys.exit()
-    
+
     for log_file in ('OCTOPUS-LOG.html', 'error_log.html'):
         if os.path.isfile(os.path.join(path, log_file)):
             os.remove(os.path.join(path, log_file))
-    
+
     octo_log(path, '<head><title>OCTOPUS-LOG</title></head>', p=False)
     octo_log(path, '<b>Octopus!</b> Sounds goood :)<br>', p=False)
     proc_count = multiprocessing.cpu_count() * 2
@@ -184,7 +184,7 @@ def main():
     normalize_extension_case(path)
     octo_log(path, 'Size Before Re-encode: %d MiB' % (get_dir_size(path)/1048576))
     octo_log(path, 'Re-encoding %d track(s) ...<br>' % tune_count)
-    
+
     pool = multiprocessing.Pool(proc_count)
     for i,exhaust in zip(progress.bar(xrange(tune_count)), pool.imap(dispatcher, get_tunes(path))):
         time.sleep(random.randint(7,14) / 10)
@@ -197,8 +197,7 @@ def main():
     octo_log(path, 're-encoded %d track(s) in %7.2f seconds, [%5.2f minutes]' % (tune_count, end_time - start_time, (end_time - start_time)/60))
     octo_log(path, 'Size After Re-encode: %d MiB' % (get_dir_size(path)/1048576))
     print "\nRock on! :-)"
-    octo_log(path, '<p><a href="https://github.com/timkofu/octopus">GitHub</a>\
-    </p><p>(C)%s %s</p>' % (datetime.date.today().year,__author__), p=False)
+    octo_log(path, '<p><a href="https://github.com/timkofu/octopus">GitHub</a>', p=False)
 
 
 if __name__ == '__main__':
