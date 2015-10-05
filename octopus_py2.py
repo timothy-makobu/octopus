@@ -5,6 +5,8 @@
 
 # * Re-encodes mp3, wav, m4a, aac and flac
 
+# DEPRECATED. Use the py3 version
+
 import os
 import sys
 import time
