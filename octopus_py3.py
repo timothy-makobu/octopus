@@ -13,7 +13,7 @@ import json
 import random
 import datetime
 import multiprocessing
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, TimeoutExpired
 from clint.textui import progress
 from mutagen.id3 import TENC
 from mutagen.mp3 import MP3
@@ -51,6 +51,7 @@ for ex in [
         sys.exit()
 
 allowed_extensions = ('.mp3', '.wav', '.acc', '.m4a', '.flac')
+subprocess_timeout = 60  # seconds
 # *** #
 
 # Transcode factory
@@ -68,92 +69,167 @@ def reencode_mp3(tune):
         if 'TENC' in track:
             if track['TENC'] == 'octopus':
                 return
-        _add_id3_tag(tune)
-        trash_can.write(b''.join(
-            Popen([lame, tune] + lameopts, stdout=PIPE, stderr=PIPE).communicate()))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        lame,
+                        tune] +
+                    lameopts,
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
-        trash_can.write(b''.join(
-            Popen([mp3gain, '-r', '-q', tune], stdout=PIPE, stderr=PIPE).communicate()))
-    except OSError as e:
-        octo_error_log(path, str(e))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        mp3gain,
+                        '-r',
+                        '-q',
+                        tune],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
+        _add_id3_tag(tune)
+    except (OSError, TimeoutExpired) as e:
+        print(str(e))
         pass
 
 
 def reencode_wav_to_mp3(tune):
     try:
-        trash_can.write(b''.join(
-            Popen([lame, tune] + lameopts, stdout=PIPE, stderr=PIPE).communicate()))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        lame,
+                        tune] +
+                    lameopts,
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.remove(tune)
         os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        mp3gain,
+                        '-r',
+                        '-q',
+                        os.path.splitext(tune)[0] +
+                        '.mp3'],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
-        trash_can.write(b''.join(Popen([mp3gain,
-                                        '-r',
-                                        '-q',
-                                        os.path.splitext(tune)[0] + '.mp3'],
-                                       stdout=PIPE,
-                                       stderr=PIPE).communicate()))
-    except OSError as e:
-        octo_error_log(path, str(e))
+    except (OSError, TimeoutExpired) as e:
+        print(str(e))
         pass
 
 
 def reencode_itunes_to_mp3(tune):
     try:
-        trash_can.write(b''.join(Popen([faad,
-                                        '-q',
-                                        '-o',
-                                        os.path.splitext(tune)[0] + '.wav',
-                                        tune],
-                                       stdout=PIPE,
-                                       stderr=PIPE).communicate()))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        faad,
+                        '-q',
+                        '-o',
+                        os.path.splitext(tune)[0] +
+                        '.wav',
+                        tune],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.remove(tune)
-        trash_can.write(b''.join(Popen([lame, os.path.splitext(
-            tune)[0] + '.wav'] + lameopts, stdout=PIPE, stderr=PIPE).communicate()))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        lame,
+                        os.path.splitext(tune)[0] +
+                        '.wav'] +
+                    lameopts,
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(
             os.path.splitext(tune)[0] +
             '.wav.mp3',
             os.path.splitext(tune)[0] +
             '.mp3')
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        mp3gain,
+                        '-r',
+                        '-q',
+                        os.path.splitext(tune)[0] +
+                        '.mp3'],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
-        trash_can.write(b''.join(Popen([mp3gain,
-                                        '-r',
-                                        '-q',
-                                        os.path.splitext(tune)[0] + '.mp3'],
-                                       stdout=PIPE,
-                                       stderr=PIPE).communicate()))
-    except OSError as e:
-        octo_error_log(path, str(e))
+    except (OSError, TimeoutExpired) as e:
+        print(str(e))
         pass
 
 
 def reencode_flac_to_mp3(tune):
     try:
         trash_can.write(
-            b''.join(Popen([flac, '-ds', tune], stdout=PIPE, stderr=PIPE).communicate()))
+            b''.join(
+                Popen(
+                    [
+                        flac,
+                        '-ds',
+                        tune],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.remove(tune)
-        trash_can.write(b''.join(Popen([lame, os.path.splitext(
-            tune)[0] + '.wav'] + lameopts, stdout=PIPE, stderr=PIPE).communicate()))
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        lame,
+                        os.path.splitext(tune)[0] +
+                        '.wav'] +
+                    lameopts,
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(
             os.path.splitext(tune)[0] +
             '.wav.mp3',
             os.path.splitext(tune)[0] +
             '.mp3')
+        trash_can.write(
+            b''.join(
+                Popen(
+                    [
+                        mp3gain,
+                        '-r',
+                        '-q',
+                        os.path.splitext(tune)[0] +
+                        '.mp3'],
+                    stdout=PIPE,
+                    stderr=PIPE).communicate(
+                    timeout=subprocess_timeout)))
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
-        trash_can.write(b''.join(Popen([mp3gain,
-                                        '-r',
-                                        '-q',
-                                        os.path.splitext(tune)[0] + '.mp3'],
-                                       stdout=PIPE,
-                                       stderr=PIPE).communicate()))
-    except OSError as e:
-        octo_error_log(path, str(e))
+    except (OSError, TimeoutExpired) as e:
+        print(str(e))
         pass
 
 
 # Utility functions
-def get_tunes(path):
+def get_tunes():
     for fileb in os.walk(path):
         for tune in fileb[2]:
             if os.path.splitext(os.path.join(fileb[0], tune))[
@@ -163,7 +239,7 @@ def get_tunes(path):
                     yield str(eff)
 
 
-def normalize_extension_case(path):
+def normalize_extension_case():
     for fileb in os.walk(path):
         for tune in fileb[2]:
             extension = os.path.splitext(os.path.join(fileb[0], tune))[1]
@@ -179,7 +255,7 @@ def normalize_extension_case(path):
                 os.rename(oldSong, newSong)
 
 
-def get_dir_size(path):
+def get_dir_size():
     dirSize = 0
     for (fpath, dirs, files) in os.walk(path):
         for file in files:
@@ -188,21 +264,7 @@ def get_dir_size(path):
     return dirSize
 
 
-def octo_log(path, message, p=True):
-    if p:
-        print(message.replace('<br>', '\n'))
-    fh = open(os.path.join(path, 'OCTOPUS-LOG.html'), 'a')
-    fh.write(message + '<br>')
-    fh.close()
-
-
-def octo_error_log(path, message):
-    fh = open(os.path.join(path, 'error_log.html'), 'a')
-    fh.write(message + '<br>')
-    fh.close()
-
-
-def get_tune_count(path):
+def get_tune_count():
     tune_count = 0
     for fileb in os.walk(path):
         for tune in fileb[2]:
@@ -212,7 +274,6 @@ def get_tune_count(path):
     return tune_count
 
 
-# Managers
 def dispatcher(tune):
     ext = os.path.splitext(tune)[1]
     if ext == '.mp3':
@@ -231,7 +292,7 @@ def main():
         sys.exit()
 
     curr_tune = 1
-    tune_count = get_tune_count(path)
+    tune_count = get_tune_count()
 
     if not tune_count:
         input("Found {} tacks to re-encode. Press ENTER to exit ...".format(tune_count))
@@ -242,54 +303,43 @@ def main():
             os.getcwd())).lower() != 'y':
         sys.exit()
 
-    for log_file in ('OCTOPUS-LOG.html', 'error_log.html'):
-        if os.path.isfile(os.path.join(path, log_file)):
-            os.remove(os.path.join(path, log_file))
-
-    octo_log(path, '<head><title>OCTOPUS-LOG</title></head>', p=False)
-    octo_log(path, '<b>Octopus!</b> Sounds goood :)<br>', p=False)
     proc_count = multiprocessing.cpu_count() * 2
     if proc_count > config['max_proc']:
         proc_count = config['max_proc']
     start_time = time.time()
-    octo_log(path, 'Spawning [[ {} ]] workers ...'.format(proc_count))
-    octo_log(
-        path,
+    print('Spawning [[ {} ]] workers ...'.format(proc_count))
+    print(
         'Start time: ' +
         time.strftime(
             '%a, %b %d, %Y at %I:%M:%S %p',
             time.localtime(start_time)))
-    octo_log(path, 'Setting track(s) extension(s) to lower case ...')
-    normalize_extension_case(path)
-    octo_log(
-        path, 'Size Before Re-encode: {} MiB'.format(get_dir_size(path) / 1048576))
-    octo_log(path, 'Re-encoding {} track(s) ...<br>'.format(tune_count))
+    print('Setting track(s) extension(s) to lower case ...')
+    normalize_extension_case()
+    print(
+        'Size Before Re-encode: {} MiB'.format(get_dir_size() / 1048576))
+    print('Re-encoding {} track(s) ...'.format(tune_count))
 
-    pool = multiprocessing.Pool(proc_count)
-    for i, exhaust in zip(
-        progress.bar(
-            range(tune_count)), pool.imap(
-            dispatcher, get_tunes(path))):
-        time.sleep(random.randint(7, 14) / 10)
-        del(exhaust)
+    with multiprocessing.Pool(proc_count) as pool:
+        for i, exhaust in zip(
+            progress.bar(
+                range(tune_count)), pool.imap(
+                dispatcher, get_tunes())):
+            time.sleep(random.randint(7, 14) / 10)
+            del(exhaust)
 
-    octo_log(path, "<br>Success!<br>")
+    print("Success!")
     end_time = time.time()
-    octo_log(
+    print(
         path,
         'End time: ' +
         time.strftime(
             '%a, %b %d, %Y at %I:%M:%S %p',
             time.localtime(end_time)))
-    octo_log(
-        path, 're-encoded %d track(s) in %7.2f seconds, [%5.2f minutes]' %
+    print(
+        're-encoded %d track(s) in %7.2f seconds, [%5.2f minutes]' %
         (tune_count, end_time - start_time, (end_time - start_time) / 60))
-    octo_log(path, 'Size After Re-encode: {} MiB'.format(get_dir_size(path) / 1048576))
+    print('Size After Re-encode: {} MiB'.format(get_dir_size() / 1048576))
     print("\nRock on! :-)")
-    octo_log(
-        path,
-        '<p><a href="https://github.com/timkofu/octopus">GitHub</a>',
-        p=False)
 
 
 if __name__ == '__main__':
@@ -303,3 +353,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print()
         sys.exit()
+    finally:
+        trash_can.close()
