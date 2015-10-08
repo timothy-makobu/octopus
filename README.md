@@ -10,6 +10,8 @@ Binaries needed:
 - Lame http://lame.sourceforge.net/
 - aacgain http://aacgain.altosdesign.com/ or mp3gain http://mp3gain.sourceforge.net/
 
+Requires Python 3.3+
+
 ######Usage:
 - Clone the repository $git clone https://github.com/timkofu/octopus.git
 - Edit octoconf.json and set the paths to the required binaries

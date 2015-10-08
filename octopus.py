@@ -58,9 +58,12 @@ subprocess_timeout = 60  # seconds
 
 
 def _add_id3_tag(tune):
-    track = MP3(tune)
-    track['TENC'] = TENC(encoding=3, text='octopus')
-    track.save()
+    try:
+        track = MP3(tune)
+        track['TENC'] = TENC(encoding=3, text='octopus')
+        track.save()
+    except Exception:
+        pass
 
 
 def reencode_mp3(tune):
@@ -69,28 +72,24 @@ def reencode_mp3(tune):
         if 'TENC' in track:
             if track['TENC'] == 'octopus':
                 return
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        lame,
-                        tune] +
-                    lameopts,
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                lame,
+                tune] +
+            lameopts,
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        mp3gain,
-                        '-r',
-                        '-q',
-                        tune],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                mp3gain,
+                '-r',
+                '-q',
+                tune],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         _add_id3_tag(tune)
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -99,30 +98,27 @@ def reencode_mp3(tune):
 
 def reencode_wav_to_mp3(tune):
     try:
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        lame,
-                        tune] +
-                    lameopts,
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+
+        Popen(
+            [
+                lame,
+                tune] +
+            lameopts,
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.remove(tune)
         os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        mp3gain,
-                        '-r',
-                        '-q',
-                        os.path.splitext(tune)[0] +
-                        '.mp3'],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                mp3gain,
+                '-r',
+                '-q',
+                os.path.splitext(tune)[0] +
+                '.mp3'],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -131,49 +127,43 @@ def reencode_wav_to_mp3(tune):
 
 def reencode_itunes_to_mp3(tune):
     try:
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        faad,
-                        '-q',
-                        '-o',
-                        os.path.splitext(tune)[0] +
-                        '.wav',
-                        tune],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                faad,
+                '-q',
+                '-o',
+                os.path.splitext(tune)[0] +
+                '.wav',
+                tune],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.remove(tune)
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        lame,
-                        os.path.splitext(tune)[0] +
-                        '.wav'] +
-                    lameopts,
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                lame,
+                os.path.splitext(tune)[0] +
+                '.wav'] +
+            lameopts,
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(
             os.path.splitext(tune)[0] +
             '.wav.mp3',
             os.path.splitext(tune)[0] +
             '.mp3')
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        mp3gain,
-                        '-r',
-                        '-q',
-                        os.path.splitext(tune)[0] +
-                        '.mp3'],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                mp3gain,
+                '-r',
+                '-q',
+                os.path.splitext(tune)[0] +
+                '.mp3'],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -182,46 +172,40 @@ def reencode_itunes_to_mp3(tune):
 
 def reencode_flac_to_mp3(tune):
     try:
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        flac,
-                        '-ds',
-                        tune],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                flac,
+                '-ds',
+                tune],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.remove(tune)
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        lame,
-                        os.path.splitext(tune)[0] +
-                        '.wav'] +
-                    lameopts,
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                lame,
+                os.path.splitext(tune)[0] +
+                '.wav'] +
+            lameopts,
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(
             os.path.splitext(tune)[0] +
             '.wav.mp3',
             os.path.splitext(tune)[0] +
             '.mp3')
-        trash_can.write(
-            b''.join(
-                Popen(
-                    [
-                        mp3gain,
-                        '-r',
-                        '-q',
-                        os.path.splitext(tune)[0] +
-                        '.mp3'],
-                    stdout=PIPE,
-                    stderr=PIPE).communicate(
-                    timeout=subprocess_timeout)))
+        Popen(
+            [
+                mp3gain,
+                '-r',
+                '-q',
+                os.path.splitext(tune)[0] +
+                '.mp3'],
+            stdout=PIPE,
+            stderr=PIPE).communicate(
+            timeout=subprocess_timeout)
         _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -295,19 +279,19 @@ def main():
     tune_count = get_tune_count()
 
     if not tune_count:
-        input("Found {} tacks to re-encode. Press ENTER to exit ...".format(tune_count))
+        input("Found 0 tacks to re-encode. Press ENTER to exit ...")
         sys.exit()
     if input(
-        '\nOk; ready to reencode {0} tracks.\nHave you backed up the\n[{1}]\nfolder??? \n[y/N]: '.format(
+        '\nOk; ready to reencode {0} tracks.\nHave you backed up the [{1}] folder??? [y/N]: '.format(
             tune_count,
-            os.getcwd())).lower() != 'y':
+            path)).lower() != 'y':
         sys.exit()
 
     proc_count = multiprocessing.cpu_count() * 2
     if proc_count > config['max_proc']:
         proc_count = config['max_proc']
     start_time = time.time()
-    print('Spawning [[ {} ]] workers ...'.format(proc_count))
+    print('\nSpawning [[ {} ]] workers ...'.format(proc_count))
     print(
         'Start time: ' +
         time.strftime(
@@ -346,12 +330,9 @@ if __name__ == '__main__':
 
     try:
         locals().update(config)
-        trash_can = open(os.devnull, 'wb')
         path = input(
             'Type path to music folder (Example: /home/me/Music): ').strip()
         sys.exit(main())
     except KeyboardInterrupt:
         print()
         sys.exit()
-    finally:
-        trash_can.close()
