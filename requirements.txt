@@ -1,2 +1,2 @@
-clint
-mutagen
+clint==0.5.1
+mutagen==1.31
