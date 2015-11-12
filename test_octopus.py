@@ -1,7 +1,7 @@
 
 def test_octopus():
     try:
-        import octopus
+        from octopus import reencode_mp3
         return True
     except ImportError:
         return False
