@@ -304,12 +304,11 @@ def main():
     print('Re-encoding {} track(s) ...'.format(tune_count))
 
     with multiprocessing.Pool(proc_count) as pool:
-        for i, exhaust in zip(
+        for _ in zip(
             progress.bar(
                 range(tune_count)), pool.imap(
                 dispatcher, get_tunes())):
             time.sleep(random.randint(7, 14) / 10)
-            del(exhaust)
 
     print("Success!")
     end_time = time.time()
@@ -330,8 +329,8 @@ if __name__ == '__main__':
 
     try:
         locals().update(config)
-        path = input(
-            'Type path to music folder (Example: /home/me/Music): ').strip()
+        path = os.path.expanduser(input(
+            'Type path to music folder (Example: /home/me/Music): ').strip())
         sys.exit(main())
     except KeyboardInterrupt:
         print()
