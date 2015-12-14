@@ -1,3 +1,2 @@
 clint==0.5.1
 mutagen==1.31
-pytest==2.8.2

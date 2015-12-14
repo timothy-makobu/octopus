@@ -57,7 +57,7 @@ subprocess_timeout = 60  # seconds
 # Transcode factory
 
 
-def _add_id3_tag(tune):
+def add_id3_tag(tune):
     try:
         track = MP3(tune)
         track['TENC'] = TENC(encoding=3, text='octopus')
@@ -90,7 +90,7 @@ def reencode_mp3(tune):
             stdout=PIPE,
             stderr=PIPE).communicate(
             timeout=subprocess_timeout)
-        _add_id3_tag(tune)
+        add_id3_tag(tune)
     except (OSError, TimeoutExpired) as e:
         print(str(e))
         pass
@@ -119,7 +119,7 @@ def reencode_wav_to_mp3(tune):
             stdout=PIPE,
             stderr=PIPE).communicate(
             timeout=subprocess_timeout)
-        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
+        add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
         pass
@@ -164,7 +164,7 @@ def reencode_itunes_to_mp3(tune):
             stdout=PIPE,
             stderr=PIPE).communicate(
             timeout=subprocess_timeout)
-        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
+        add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
         pass
@@ -206,7 +206,7 @@ def reencode_flac_to_mp3(tune):
             stdout=PIPE,
             stderr=PIPE).communicate(
             timeout=subprocess_timeout)
-        _add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
+        add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
         pass
