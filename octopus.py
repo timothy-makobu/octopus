@@ -51,8 +51,11 @@ for ex in [
         sys.exit()
 
 allowed_extensions = ('.mp3', '.wav', '.acc', '.m4a', '.flac')
-subprocess_timeout = 60  # seconds
+subprocess_timeout = 60  # longer for longer mp3s (more than 5 mins)
+
 # *** #
+
+locals().update(config)
 
 # Transcode factory
 
@@ -275,16 +278,10 @@ def main():
         input("{} is not a valid folder. Press ENTER to exit ...".format(path))
         sys.exit()
 
-    curr_tune = 1
     tune_count = get_tune_count()
 
     if not tune_count:
         input("Found 0 tacks to re-encode. Press ENTER to exit ...")
-        sys.exit()
-    if input(
-        '\nOk; ready to reencode {0} tracks.\nHave you backed up the [{1}] folder??? [y/N]: '.format(
-            tune_count,
-            path)).lower() != 'y':
         sys.exit()
 
     proc_count = multiprocessing.cpu_count() * 2
@@ -328,7 +325,6 @@ def main():
 if __name__ == '__main__':
 
     try:
-        locals().update(config)
         path = os.path.expanduser(input(
             'Type path to music folder (Example: /home/me/Music): ').strip())
         sys.exit(main())
