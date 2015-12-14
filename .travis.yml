@@ -10,6 +10,7 @@ addons:
       - flac
       - lame
       - mp3gain
+      - aria2
 install:
   - pip install -r requirements.txt
   - pip install coveralls
