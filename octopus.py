@@ -11,7 +11,6 @@ import sys
 import time
 import json
 import random
-import datetime
 import multiprocessing
 from subprocess import Popen, PIPE, TimeoutExpired
 from clint.textui import progress
@@ -44,7 +43,7 @@ with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf
 for ex in [
     x for x in list(
         config.keys()) if x not in [
-            'lameopts',
+        'lameopts',
         'max_proc']]:
     if not os.path.isfile(config[ex]):
         print('{} is not a file; exiting ...'.format(config[ex]))
@@ -56,6 +55,7 @@ subprocess_timeout = 60  # longer for longer mp3s (more than 5 mins)
 # *** #
 
 locals().update(config)
+
 
 # Transcode factory
 
@@ -219,8 +219,7 @@ def reencode_flac_to_mp3(tune):
 def get_tunes():
     for fileb in os.walk(path):
         for tune in fileb[2]:
-            if os.path.splitext(os.path.join(fileb[0], tune))[
-                    1].lower() in allowed_extensions:
+            if os.path.splitext(os.path.join(fileb[0], tune))[1].lower() in allowed_extensions:
                 eff = os.path.join(fileb[0], tune)
                 if os.path.getsize(eff) >= 1024:
                     yield str(eff)
@@ -235,10 +234,10 @@ def normalize_extension_case():
                         d,
                         extension,
                         re.I) for d in allowed_extensions) and any(
-                    x.isupper() for x in extension):
+                x.isupper() for x in extension):
                 oldSong = os.path.join(fileb[0], tune)
                 newSong = os.path.splitext(os.path.join(fileb[0], tune))[
-                    0] + os.path.splitext(os.path.join(fileb[0], tune))[1].lower()
+                              0] + os.path.splitext(os.path.join(fileb[0], tune))[1].lower()
                 os.rename(oldSong, newSong)
 
 
@@ -255,8 +254,7 @@ def get_tune_count():
     tune_count = 0
     for fileb in os.walk(path):
         for tune in fileb[2]:
-            if os.path.splitext(os.path.join(fileb[0], tune))[
-                    1].lower() in allowed_extensions:
+            if os.path.splitext(os.path.join(fileb[0], tune))[1].lower() in allowed_extensions:
                 tune_count += 1
     return tune_count
 
@@ -302,9 +300,9 @@ def main():
 
     with multiprocessing.Pool(proc_count) as pool:
         for _ in zip(
-            progress.bar(
-                range(tune_count)), pool.imap(
-                dispatcher, get_tunes())):
+                progress.bar(
+                    range(tune_count)), pool.imap(
+                    dispatcher, get_tunes())):
             time.sleep(random.randint(7, 14) / 10)
 
     print("Success!")
