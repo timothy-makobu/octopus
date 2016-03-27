@@ -43,18 +43,20 @@ with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf
 for ex in [
     x for x in list(
         config.keys()) if x not in [
-        'lameopts',
-        'max_proc']]:
+            'lameopts',
+            'max_proc',
+            'timeout'
+        ]]:
     if not os.path.isfile(config[ex]):
         print('{} is not a file; exiting ...'.format(config[ex]))
         sys.exit()
 
 allowed_extensions = ('.mp3', '.wav', '.acc', '.m4a', '.flac')
-subprocess_timeout = 60  # longer for longer mp3s (more than 5 mins)
 
 # *** #
 
 locals().update(config)
+timeout = int(timeout)
 
 
 # Transcode factory
@@ -82,7 +84,7 @@ def reencode_mp3(tune):
             lameopts,
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
         Popen(
             [
@@ -92,7 +94,7 @@ def reencode_mp3(tune):
                 tune],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         add_id3_tag(tune)
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -109,7 +111,7 @@ def reencode_wav_to_mp3(tune):
             lameopts,
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.remove(tune)
         os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
         Popen(
@@ -121,7 +123,7 @@ def reencode_wav_to_mp3(tune):
                 '.mp3'],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -140,7 +142,7 @@ def reencode_itunes_to_mp3(tune):
                 tune],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.remove(tune)
         Popen(
             [
@@ -150,13 +152,13 @@ def reencode_itunes_to_mp3(tune):
             lameopts,
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
-        os.rename(
-            os.path.splitext(tune)[0] +
-            '.wav.mp3',
-            os.path.splitext(tune)[0] +
-            '.mp3')
+        #os.rename(
+        #    os.path.splitext(tune)[0] +
+        #    '.wav.mp3',
+        #    os.path.splitext(tune)[0] +
+        #    '.mp3')
         Popen(
             [
                 mp3gain,
@@ -166,7 +168,7 @@ def reencode_itunes_to_mp3(tune):
                 '.mp3'],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
@@ -182,7 +184,7 @@ def reencode_flac_to_mp3(tune):
                 tune],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.remove(tune)
         Popen(
             [
@@ -192,7 +194,7 @@ def reencode_flac_to_mp3(tune):
             lameopts,
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
         os.rename(
             os.path.splitext(tune)[0] +
@@ -208,7 +210,7 @@ def reencode_flac_to_mp3(tune):
                 '.mp3'],
             stdout=PIPE,
             stderr=PIPE).communicate(
-            timeout=subprocess_timeout)
+            timeout=timeout)
         add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as e:
         print(str(e))
