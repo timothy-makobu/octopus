@@ -1,7 +1,7 @@
 ![travis-ci](https://travis-ci.org/timkofu/octopus.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/timkofu/octopus/badge.svg?branch=master&service=github)](https://coveralls.io/github/timkofu/octopus?branch=master)
 
-![Logo](https://code.google.com/p/tims-octopus/logo?cct=1260817422)
+![Logo](https://timkofu.github.io/octopus.png)
 
 ####Octopus! re-encodes .mp3, .wav, .aac, flac and .m4a sound files to true-stereo psycho-acoustic mp3.
 
