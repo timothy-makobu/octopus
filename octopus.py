@@ -154,11 +154,6 @@ def reencode_itunes_to_mp3(tune):
             stderr=PIPE).communicate(
             timeout=timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
-        #os.rename(
-        #    os.path.splitext(tune)[0] +
-        #    '.wav.mp3',
-        #    os.path.splitext(tune)[0] +
-        #    '.mp3')
         Popen(
             [
                 mp3gain,
@@ -196,11 +191,6 @@ def reencode_flac_to_mp3(tune):
             stderr=PIPE).communicate(
             timeout=timeout)
         os.remove(os.path.splitext(tune)[0] + '.wav')
-        os.rename(
-            os.path.splitext(tune)[0] +
-            '.wav.mp3',
-            os.path.splitext(tune)[0] +
-            '.mp3')
         Popen(
             [
                 mp3gain,
