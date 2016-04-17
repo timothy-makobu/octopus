@@ -1,18 +1,16 @@
 language: python
 python:
-  - "3.5"
+  - "3.5.1"
 addons:
   apt:
     packages:
       - faad
       - flac
       - lame
-      - gir1.2-gstreamer-1.0 libgstreamer1.0-0 gstreamer1.0-plugins-base
-      - gstreamer1.0-plugins-good
+      - python-rgain
       - aria2
 install:
   - pip install -r requirements.txt
-  - pip install rgain
   - pip install coveralls
 before_script:
   - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
