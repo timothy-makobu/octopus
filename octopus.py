@@ -48,11 +48,9 @@ ALLOWED_EXTENSIONS = ('.mp3', '.wav', '.aac', '.m4a', '.flac')
 #locals().update(CONFIG)
 
 TIMEOUT = int(CONFIG["timeout"])
-if not os.path.isfile(CONFIG['replaygain']):
-    CONFIG['replaygain'] = '/bin/ls'
+
 
 # Transcode factory
-
 
 def add_id3_tag(tune):
     ''' Mark an mp3 as processed to octopus ignores it if fed again '''
