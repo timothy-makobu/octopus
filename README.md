@@ -1,5 +1,4 @@
-![travis-ci](https://travis-ci.org/timkofu/octopus.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/timkofu/octopus/badge.svg?branch=master&service=github)](https://coveralls.io/github/timkofu/octopus?branch=master)
+![travis-ci](https://travis-ci.org/timkofu/octopus.svg?branch=master) 
 
 ![Logo](https://timkofu.github.io/octopus.png)
 
