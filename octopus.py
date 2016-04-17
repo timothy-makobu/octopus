@@ -73,8 +73,12 @@ def reencode_mp3(tune):
         Popen([CONFIG['lame'], tune] + CONFIG['lameopts'],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
-        Popen([CONFIG['replaygain'], '-r', '-q', tune],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+        try:
+            # Workaround for travis not installing python-rgain
+            Popen([CONFIG['replaygain'], '-r', '-q', tune],\
+                stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+        except OSError:
+            pass
         add_id3_tag(tune)
     except (OSError, TimeoutExpired) as err:
         print(str(err))
@@ -89,8 +93,12 @@ def reencode_wav_to_mp3(tune):
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.remove(tune)
         os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
-        Popen([CONFIG['replaygain'], '-r', '-q', os.path.splitext(tune)[0] + '.mp3'],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+        try:
+            # Workaround for travis not installing python-rgain
+            Popen([CONFIG['replaygain'], '-r', '-q', os.path.splitext(tune)[0] + '.mp3'],\
+                stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+        except OSError:
+            pass
         add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as err:
         print(str(err))
