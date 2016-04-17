@@ -11,6 +11,7 @@ addons:
       - aria2
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
 before_script:
   - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
   - aria2c http://www-mmsp.ece.mcgill.ca/documents/audioformats/wave/Samples/Microsoft/8_Channel_ID.wav
@@ -19,3 +20,6 @@ before_script:
   - aria2c http://download.wavetlan.com/SVV/Media/HTTP/AAC/Media-Convert/MediaConvert_Test_7%20-%20AAC_AAC-LC_Stereo_96kbps_44100Hz%20-%20Eric_Clapton-Wonderful_Tonight.AAC
 script:
   - python tests.py
+  - coverage run --source="." tests.py
+after_success:
+  - coveralls

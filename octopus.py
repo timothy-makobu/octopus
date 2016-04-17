@@ -22,19 +22,9 @@ __author__ = "Timothy Makobu"
 # *** Configs *** #
 CONFIG = {
     'lameopts': [
-        '-m',
-        's',
-        '-q',
-        '0',
-        '--vbr-new',
-        '-V',
-        '0',
-        '-b',
-        '128',
-        '-B',
-        '192',
-        '--silent'],
-    'max_proc': 10,
+        '-m', 's', '-q', '0', '--vbr-new', '-V',
+        '0', '-b', '128', '-B', '192', '--silent'
+    ], 'max_proc': 10,
 }
 
 with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf:
