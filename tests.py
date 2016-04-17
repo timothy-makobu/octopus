@@ -23,6 +23,7 @@ from octopus import (
 
 class TestBase(unittest.TestCase):
     octopus.PATH = os.path.dirname(os.path.abspath(__file__))
+    octopus.CONFIG['replaygain'] = '/bin/ls'
 
 
 class TestReencodeFunctions(TestBase):
