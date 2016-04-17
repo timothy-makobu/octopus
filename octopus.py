@@ -30,6 +30,10 @@ CONFIG = {
 with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf:
     CONFIG.update(json.loads(more_conf.read()))
 
+# Mostly for coveralls tests
+if not os.path.isfile(CONFIG['replaygain']):
+    CONFIG['replaygain'] = '/bin/ls'
+
 for ex in [x for x in list(CONFIG.keys()) if x not in\
 ['lameopts', 'max_proc', 'timeout']]:
     if not os.path.isfile(CONFIG[ex]):
