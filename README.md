@@ -11,7 +11,7 @@ Binaries needed:
 - Faad2 http://www.audiocoding.com/faad2.html
 - Flac https://xiph.org/flac/download.html
 - Lame http://lame.sourceforge.net/
-- aacgain http://aacgain.altosdesign.com/ or mp3gain http://mp3gain.sourceforge.net/
+- rgain https://bitbucket.org/fk/rgain (On Ubuntu 16.04 $ sudo apt install python-rgain)
 
 Requires Python 3.3+
 
