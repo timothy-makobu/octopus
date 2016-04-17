@@ -12,13 +12,12 @@ addons:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
-before_script:
+script:
   - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
   - aria2c http://www-mmsp.ece.mcgill.ca/documents/audioformats/wave/Samples/Microsoft/8_Channel_ID.wav
   - aria2c http://www.eclassical.com/custom/eclassical/files/BIS1536-001-flac_24.flac
   - aria2c http://download.wavetlan.com/SVV/Media/HTTP/AAC/iTunes/iTunes_test2_AAC-LC_v4_Stereo_VBR_128kbps_44100Hz.m4a
   - aria2c http://download.wavetlan.com/SVV/Media/HTTP/AAC/Media-Convert/MediaConvert_Test_7%20-%20AAC_AAC-LC_Stereo_96kbps_44100Hz%20-%20Eric_Clapton-Wonderful_Tonight.AAC
-script:
   - python tests.py
   - coverage run --source="." tests.py
 after_success:
