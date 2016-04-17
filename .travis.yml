@@ -7,10 +7,12 @@ addons:
       - faad
       - flac
       - lame
-      - python-rgain
+      - gir1.2-gstreamer-1.0 libgstreamer1.0-0 gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
       - aria2
 install:
   - pip install -r requirements.txt
+  - pip install rgain
   - pip install coveralls
 before_script:
   - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
