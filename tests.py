@@ -42,7 +42,7 @@ class TestUtilityFunctions(TestBase):
         self.assertIs(normalize_extension_case(), None)
         self.assertIsInstance(get_dir_size(), int)
         self.assertIsInstance(get_tune_count(), int)
-        self.assertIs(main(), None)
+        #self.assertIs(main(), None)
 
 
 if __name__ == '__main__':
