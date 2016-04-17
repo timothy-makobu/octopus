@@ -44,7 +44,8 @@ ALLOWED_EXTENSIONS = ('.mp3', '.wav', '.aac', '.m4a', '.flac')
 #locals().update(CONFIG)
 
 TIMEOUT = int(CONFIG["timeout"])
-
+if not os.path.isfile(CONFIG['replaygain']):
+    CONFIG['replaygain'] = '/bin/ls'
 
 # Transcode factory
 
