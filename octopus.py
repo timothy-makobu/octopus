@@ -202,7 +202,7 @@ def main():
         input("Found 0 tacks to re-encode. Press ENTER to exit ...")
         sys.exit()
 
-    proc_count = multiprocessing.cpu_count() * 2
+    proc_count = multiprocessing.cpu_count()
     if proc_count > CONFIG['max_proc']:
         proc_count = CONFIG['max_proc']
     start_time = time.time()

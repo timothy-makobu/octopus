@@ -3,5 +3,5 @@
     "replaygain": "/usr/bin/replaygain",
     "flac": "/usr/bin/flac",
     "lame": "/usr/bin/lame",
-    "timeout":"300"
+    "timeout":"3600"
 }
