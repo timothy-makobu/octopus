@@ -9,7 +9,7 @@ addons:
       - lame
       - python-rgain
       - aria2
-      - libtag1-dev
+      - python3-taglib
 install:
   - pip install -r requirements.txt
   - pip install coveralls
