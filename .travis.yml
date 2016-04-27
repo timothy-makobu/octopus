@@ -7,9 +7,10 @@ addons:
       - faad
       - flac
       - lame
-      - python-rgain
       - aria2
-      - python3-taglib
+before_install:
+  - apt-get install python-rgain -y
+  - apt-get install python3-taglib -y
 install:
   - pip install -r requirements.txt
   - pip install coveralls
