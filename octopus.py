@@ -13,9 +13,7 @@ import random
 import multiprocessing
 from subprocess import Popen, PIPE, TimeoutExpired
 from clint.textui import progress
-from mutagen.id3 import TENC
-from mutagen.mp3 import MP3
-from mutagen import MutagenError
+import taglib
 
 __author__ = "Timothy Makobu"
 
@@ -56,11 +54,11 @@ def add_id3_tag(tune):
     ''' Mark an mp3 as processed to octopus ignores it if fed again '''
 
     try:
-        track = MP3(tune)
-        track['TENC'] = TENC(encoding=3, text='octopus')
+        track = taglib.File(tune)
+        track.tags['TENC'] = 'octopus'
         track.save()
-    except MutagenError:
-        pass
+    except Exception as ex:
+        print(str(ex))
 
 
 def reencode_mp3(tune):
@@ -68,9 +66,9 @@ def reencode_mp3(tune):
 
     try:
 
-        track = MP3(tune)
-        if 'TENC' in track:
-            if track['TENC'] == 'octopus':
+        track = taglib.File(tune)
+        tenc_tag = track.tags.get('TENC')
+        if tenc_tag and tenc_tag == 'octopus':
                 return
 
         Popen([CONFIG['lame'], tune] + CONFIG['lameopts'],\
