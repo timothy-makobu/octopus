@@ -135,7 +135,6 @@ def get_tunes():
              in ALLOWED_EXTENSIONS:
                 eff = os.path.join(fileb[0], tune)
                 if os.path.getsize(eff) >= 1024:
-                    print(eff)
                     yield str(eff)
 
 
