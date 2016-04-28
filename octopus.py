@@ -57,38 +57,37 @@ def add_id3_tag(tune):
         print(str(ex))
 
 
-def reencode_mp3(tune):
+def normalize(tune):
+    """ Set track to reference decibel level of 89db """
+
+    Popen([CONFIG['replaygain'], '-r', tune], \
+        stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+
+
+def reencode_mp3_and_wav(tune):
     ''' Re-encodes an mp3 applying psycho-acoustics and true stereo '''
 
     try:
 
-        track = taglib.File(tune)
-        tenc_tag = track.tags.get('TENC')
-        if tenc_tag and tenc_tag[0] == 'octopus':
-            return
+        file_ext = os.path.splitext(tune)[1]
+        if file_ext == '.mp3':
+            track = taglib.File(tune)
+            tenc_tag = track.tags.get('TENC')
+            if tenc_tag and tenc_tag[0] == 'octopus':
+                return
 
         Popen([CONFIG['lame'], tune] + CONFIG['lameopts'],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
-        os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
-        Popen([CONFIG['replaygain'], '-r', tune],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
+
+        if file_ext == '.mp3':
+            os.rename(os.path.splitext(tune)[0]+'.mp3.mp3', tune)
+        elif file_ext == '.wav':
+            os.remove(tune)
+            tune = os.path.splitext(tune)[0]+'.mp3'
+
+        normalize(tune)
         add_id3_tag(tune)
-    except (OSError, TimeoutExpired) as err:
-        print(str(err))
 
-
-def reencode_wav_to_mp3(tune):
-    ''' Re-encodes .wav file to mp3 applying psycho-acoustics
-    and true stereo '''
-
-    try:
-        Popen([CONFIG['lame'], tune] + CONFIG['lameopts'],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
-        os.remove(tune)
-        os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
-        Popen([CONFIG['replaygain'], '-r', os.path.splitext(tune)[0] + '.mp3'],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
-        add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as err:
         print(str(err))
 
@@ -101,7 +100,7 @@ def reencode_itunes_to_mp3(tune):
         Popen([CONFIG['faad'], '-q', '-o', os.path.splitext(tune)[0] + '.wav', tune],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.remove(tune)
-        reencode_wav_to_mp3(os.path.splitext(tune)[0] + '.wav')
+        reencode_mp3_and_wav(os.path.splitext(tune)[0] + '.wav')
     except (OSError, TimeoutExpired) as err:
         print(str(err))
 
@@ -114,7 +113,7 @@ def reencode_flac_to_mp3(tune):
         Popen([CONFIG['flac'], '-ds', tune],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.remove(tune)
-        reencode_wav_to_mp3(os.path.splitext(tune)[0] + '.wav')
+        reencode_mp3_and_wav(os.path.splitext(tune)[0] + '.wav')
     except (OSError, TimeoutExpired) as err:
         print(str(err))
 
@@ -173,10 +172,8 @@ def dispatcher(tune):
     ''' Calls the right reencode function for given file '''
 
     ext = os.path.splitext(tune)[1]
-    if ext == '.mp3':
-        reencode_mp3(tune)
-    elif ext == '.wav':
-        reencode_wav_to_mp3(tune)
+    if ext in ('.mp3', '.wav'):
+        reencode_mp3_and_wav(tune)
     elif ext in ('.aac', '.m4a'):
         reencode_itunes_to_mp3(tune)
     elif ext == '.flac':
