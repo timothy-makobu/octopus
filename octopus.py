@@ -28,10 +28,6 @@ CONFIG = {
 with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf:
     CONFIG.update(json.loads(more_conf.read()))
 
-# Mostly for coveralls tests
-if not os.path.isfile(CONFIG['replaygain']):
-    CONFIG['replaygain'] = '/bin/ls'
-
 for ex in [x for x in list(CONFIG.keys()) if x not in\
 ['lameopts', 'max_proc', 'timeout']]:
     if not os.path.isfile(CONFIG[ex]):
@@ -68,13 +64,13 @@ def reencode_mp3(tune):
 
         track = taglib.File(tune)
         tenc_tag = track.tags.get('TENC')
-        if tenc_tag and tenc_tag == 'octopus':
-                return
+        if tenc_tag and tenc_tag[0] == 'octopus':
+            return
 
         Popen([CONFIG['lame'], tune] + CONFIG['lameopts'],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.rename(os.path.splitext(tune)[0] + '.mp3.mp3', tune)
-        Popen([CONFIG['replaygain'], '-r', '-q', tune],\
+        Popen([CONFIG['replaygain'], '-r', tune],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         add_id3_tag(tune)
     except (OSError, TimeoutExpired) as err:
@@ -90,7 +86,7 @@ def reencode_wav_to_mp3(tune):
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         os.remove(tune)
         os.rename(tune + '.mp3', os.path.splitext(tune)[0] + '.mp3')
-        Popen([CONFIG['replaygain'], '-r', '-q', os.path.splitext(tune)[0] + '.mp3'],\
+        Popen([CONFIG['replaygain'], '-r', os.path.splitext(tune)[0] + '.mp3'],\
             stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
         add_id3_tag(os.path.splitext(tune)[0] + '.mp3')
     except (OSError, TimeoutExpired) as err:

@@ -1,5 +1,5 @@
 ![travis-ci](https://travis-ci.org/timkofu/octopus.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/timkofu/octopus/badge.svg?branch=master&service=github)](https://coveralls.io/github/timkofu/octopus?branch=master) 
+[![Coverage Status](https://coveralls.io/repos/timkofu/octopus/badge.svg?branch=master&service=github)](https://coveralls.io/github/timkofu/octopus?branch=master)
 
 ![Logo](https://timkofu.github.io/octopus.png)
 
@@ -16,6 +16,7 @@ Binaries needed:
 Requires Python 3.3+
 
 ######Usage:
-- Clone the repository $git clone https://github.com/timkofu/octopus.git
+- Clone the repository ($git clone https://github.com/timkofu/octopus.git)
+- Install the Python dependancies ($ pip install -r requirements.txt)
 - Edit octoconf.json and set the paths to the required binaries
-- Run and enjoy
+- Rock!

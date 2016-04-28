@@ -1,3 +1,4 @@
 clint==0.5.1
+# ## sudo apt-get install libtag1-dev -y
 pytaglib==1.2.0
-# # sudo apt install python-rgain <-- So it installs add dependancies as well
+# ## sudo apt install python-rgain -y <-- Installs all dependancies as well
