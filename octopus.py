@@ -184,13 +184,13 @@ def main():
     ''' Commander '''
 
     if not os.path.isdir(PATH):
-        input("{} is not a valid folder. Press ENTER to exit ...".format(PATH))
+        print("{} is not a valid folder.".format(PATH))
         sys.exit()
 
     tune_count = get_tune_count()
 
     if not tune_count:
-        input("Found 0 tacks to re-encode. Press ENTER to exit ...")
+        print("Found 0 tacks to re-encode.")
         sys.exit()
 
     proc_count = multiprocessing.cpu_count()
