@@ -85,8 +85,8 @@ def reencode_mp3_and_wav(tune):
             os.remove(tune)
             tune = os.path.splitext(tune)[0]+'.mp3'
 
-        normalize(tune)
         add_id3_tag(tune)
+        normalize(tune)
 
     except (OSError, TimeoutExpired) as err:
         print(str(err))
