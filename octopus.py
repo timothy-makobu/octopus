@@ -25,7 +25,9 @@ CONFIG = {
     ], 'max_proc': 10,
 }
 
-with open(os.path.join(os.path.dirname(__file__), 'octoconf.json')) as more_conf:
+config_file = os.environ.get("MY_OCTOCONF") or\
+ os.path.join(os.path.dirname(__file__), 'octoconf.json')
+with open(config_file) as more_conf:
     CONFIG.update(json.loads(more_conf.read()))
 
 for ex in [x for x in list(CONFIG.keys()) if x not in\

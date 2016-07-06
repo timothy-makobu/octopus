@@ -18,5 +18,5 @@ Requires Python 3.3+
 ######Usage:
 - Clone the repository ($git clone https://github.com/timkofu/octopus.git)
 - Install the Python dependancies ($ pip install -r requirements.txt)
-- Edit octoconf.json and set the paths to the required binaries
+- Set the environment variable MY_OCTOCONF to the full path to your config file, or edit octoconf.json and set the paths to the required binaries
 - Rock!
