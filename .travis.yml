@@ -11,7 +11,9 @@ addons:
       - lame
       - aria2
 before_install:
-  - sudo apt-get install python-rgain -y
+  - sudo add-apt-repository ppa:flexiondotorg/audio
+  - sudo apt-get update
+  - sudo apt-get install mp3gain -y
   - sudo apt-get install libtag1-dev -y
 install:
   - pip install -r requirements.txt

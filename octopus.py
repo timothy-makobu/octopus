@@ -60,7 +60,7 @@ def add_id3_tag(tune):
 def normalize(tune):
     """ Set track to reference decibel level of 89db """
 
-    Popen([CONFIG['replaygain'], tune], \
+    Popen([CONFIG['mp3gain', '-rq'], tune], \
         stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
 
 

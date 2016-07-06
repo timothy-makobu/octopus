@@ -1,6 +1,6 @@
 {
     "faad": "/usr/bin/faad",
-    "replaygain": "/usr/bin/replaygain",
+    "mp3gain": "/usr/bin/mp3gain",
     "flac": "/usr/bin/flac",
     "lame": "/usr/bin/lame",
     "timeout":"3600"
