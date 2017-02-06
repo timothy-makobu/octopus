@@ -25,7 +25,7 @@ class TestReencodeFunctions(TestBase):
     def test_reencode_functions(self):
         self.assertIs(add_id3_tag("wave.mp3"), None)
         self.assertIs(reencode_mp3_and_wav("wave.mp3"), None)
-        self.assertIs(reencode_mp3_and_wav("8_Channel_ID.wav"), None)
+        self.assertIs(reencode_mp3_and_wav("Kurzweil-K2000-Big-Mono-Bass-C1.wav"), None)
 
 class TestUtilityFunctions(TestBase):
     def test_utility_functions(self):
