@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
 # Octopus! sounds goood :-)
@@ -14,8 +14,6 @@ import multiprocessing
 from subprocess import Popen, PIPE, TimeoutExpired
 from clint.textui import progress
 import taglib
-
-__author__ = "Timothy Makobu"
 
 # *** Configs *** #
 CONFIG = {
@@ -36,7 +34,7 @@ for ex in [x for x in list(CONFIG.keys()) if x not in\
         print('{} is not a file; exiting ...'.format(CONFIG[ex]))
         sys.exit()
 
-ALLOWED_EXTENSIONS = ('.mp3', '.wav', '.aac', '.m4a', '.flac')
+ALLOWED_EXTENSIONS = ('.mp3', '.wav')
 
 # *** #
 
@@ -49,7 +47,7 @@ TIMEOUT = int(CONFIG["timeout"])
 # Transcode factory
 
 def add_id3_tag(tune):
-    ''' Mark an mp3 as processed to octopus ignores it if fed again '''
+    ''' Mark an mp3 as processed so octopus ignores it if fed again '''
 
     try:
         track = taglib.File(tune)
@@ -90,32 +88,6 @@ def reencode_mp3_and_wav(tune):
         add_id3_tag(tune)
         normalize(tune)
 
-    except (OSError, TimeoutExpired) as err:
-        print(str(err))
-
-
-def reencode_itunes_to_mp3(tune):
-    ''' Re-encodes .aac and .m4a files to mp3 applying
-    psycho-acoustics and true stereo '''
-
-    try:
-        Popen([CONFIG['faad'], '-q', '-o', os.path.splitext(tune)[0] + '.wav', tune],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
-        os.remove(tune)
-        reencode_mp3_and_wav(os.path.splitext(tune)[0] + '.wav')
-    except (OSError, TimeoutExpired) as err:
-        print(str(err))
-
-
-def reencode_flac_to_mp3(tune):
-    ''' Re-encodes .flac file to mp3 applying
-    psycho-acoustics and true stereo '''
-
-    try:
-        Popen([CONFIG['flac'], '-ds', tune],\
-            stdout=PIPE, stderr=PIPE).communicate(timeout=TIMEOUT)
-        os.remove(tune)
-        reencode_mp3_and_wav(os.path.splitext(tune)[0] + '.wav')
     except (OSError, TimeoutExpired) as err:
         print(str(err))
 
@@ -170,18 +142,6 @@ def get_tune_count():
     return tune_count
 
 
-def dispatcher(tune):
-    ''' Calls the right reencode function for given file '''
-
-    ext = os.path.splitext(tune)[1]
-    if ext in ('.mp3', '.wav'):
-        reencode_mp3_and_wav(tune)
-    elif ext in ('.aac', '.m4a'):
-        reencode_itunes_to_mp3(tune)
-    elif ext == '.flac':
-        reencode_flac_to_mp3(tune)
-
-
 def main():
     ''' Commander '''
 
@@ -213,7 +173,7 @@ def main():
 
     with multiprocessing.Pool(proc_count) as pool:
         for _ in zip(progress.bar(range(tune_count)),\
-        pool.imap(dispatcher, get_tunes())):
+        pool.imap(reencode_mp3_and_wav, get_tunes())):
             time.sleep(random.randint(7, 14) / 10)
 
     print("Success!")
@@ -224,6 +184,7 @@ def main():
         (tune_count, end_time - start_time, (end_time - start_time) / 60))
     print('Size After Re-encode: {} MiB'.format(get_dir_size() / 1048576))
     print("\nRock on! :-)")
+
 
 
 if __name__ == '__main__':

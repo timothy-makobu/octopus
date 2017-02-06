@@ -1,7 +1,5 @@
 {
-    "faad": "/usr/local/bin/faad",
-    "mp3gain": "/usr/local/bin/mp3gain",
-    "flac": "/usr/local/bin/flac",
-    "lame": "/usr/local/bin/lame",
-    "timeout":"3600"
+    "mp3gain": "/usr/bin/mp3gain",
+    "lame": "/usr/bin/lame",
+    "timeout":"300"
 }
