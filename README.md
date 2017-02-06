@@ -10,6 +10,7 @@ Octopus! makes your music have consistent quality.
 Dependancies:
 - Lame http://lame.sourceforge.net/
 - mp3gain http://mp3gain.sourceforge.net/
+- TagLib http://taglib.org/
 
 Requires Python 3.3+
 
