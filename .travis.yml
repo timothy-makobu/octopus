@@ -20,7 +20,7 @@ install:
   - pip install coveralls
 before_script:
   - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
-  - aria2c http://www-mmsp.ece.mcgill.ca/documents/audioformats/wave/Samples/Microsoft/8_Channel_ID.wav
+  - aria2c http://freewavesamples.com/files/Kurzweil-K2000-Big-Mono-Bass-C1.wav
 script:
   - coverage run --source="." tests.py
 after_success:
