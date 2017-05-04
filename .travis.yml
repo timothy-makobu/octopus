@@ -19,8 +19,8 @@ install:
   - pip install -r requirements.txt
   - pip install coveralls
 before_script:
-  - aria2c http://www.sample-videos.com/audio/mp3/wave.mp3
-  - aria2c http://freewavesamples.com/files/Kurzweil-K2000-Big-Mono-Bass-C1.wav
+  - aria2c http://timkofu.github.io/fls/example.mp3
+  - aria2c http://timkofu.github.io/fls/Kurzweil-K2000-Big-Mono-Bass-C1.wav
 script:
   - coverage run --source="." tests.py
 after_success:
