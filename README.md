@@ -3,7 +3,7 @@
 
 ![Logo](https://timkofu.github.io/octopus.png)
 
-####Octopus! re-encodes .mp3 and .wav sound files to true-stereo psycho-acoustic mp3.
+#### Octopus! re-encodes .mp3 and .wav sound files to true-stereo psycho-acoustic mp3.
 
 Octopus! makes your music have consistent quality.
 
@@ -14,7 +14,7 @@ Dependancies:
 
 Requires Python 3.3+
 
-######Usage:
+###### Usage:
 - Clone the repository ($git clone https://github.com/timkofu/octopus.git)
 - Install the Python dependancies ($ pip install -r requirements.txt)
 - Set the environment variable MY_OCTOCONF to the full path to your config file, or edit octoconf.json and set the paths to the needed binaries
