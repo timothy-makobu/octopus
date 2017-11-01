@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 # Octopus! sounds goood :-)
-''' * Re-encodes mp3, wav, m4a, aac and flac * '''
+''' * Re-encodes mp3 and wav * '''
 
 import os
 import re
