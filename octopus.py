@@ -19,7 +19,7 @@ import taglib
 CONFIG = {
     'lameopts': [
         '-m', 's', '-q', '0', '--vbr-new', '-V',
-        '0', '-b', '192', '-B', '320', '--silent'
+        '0', '-b', '256', '-B', '320', '--silent'
     ], 'max_proc': 10,
 }
 
